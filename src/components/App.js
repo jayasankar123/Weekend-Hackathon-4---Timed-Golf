@@ -41,7 +41,6 @@ class Timer extends React.Component {
         x: this.state.x + 5,
         ballPosition: { left: `${this.state.x + 5}px`, top: this.state.y }
       });
-      //console.log(event.key + " clicked");
     } else if (event.key === "ArrowLeft") {
       this.setState({
         x: this.state.x - 5,
@@ -61,11 +60,6 @@ class Timer extends React.Component {
       });
       //console.log(event.key + " clicked");
     }
-    if (this.state.x === 250 && this.state.y === 250) {
-      clearInterval(this.intervalId);
-      document.removeEventListener("keydown", this.handleEventListener);
-      console.log("reached destination");
-    }
   }
 
   componentDidMount() {
@@ -79,6 +73,10 @@ class Timer extends React.Component {
     if (this.state.start && first === 0) {
       document.addEventListener("keydown", this.handleEventListener);
       first++;
+    }
+    if (this.state.x === 250 && this.state.y === 250) {
+      clearInterval(this.intervalId);
+      document.removeEventListener("keydown", this.handleEventListener);
     }
   }
 
