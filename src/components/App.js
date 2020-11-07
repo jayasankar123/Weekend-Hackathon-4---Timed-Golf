@@ -1,5 +1,7 @@
 import React, { Component, useState } from "react";
 import "../styles/App.css";
+
+let first = 0;
 class Timer extends React.Component {
   constructor(props) {
     super(props);
@@ -7,7 +9,7 @@ class Timer extends React.Component {
       time: 0,
       x: 0,
       y: 0,
-      renderBall: false,
+      start: false,
       ballPosition: { left: "0px", top: "0px" },
       timer: 0
     };
@@ -18,23 +20,20 @@ class Timer extends React.Component {
   }
   buttonClickHandler() {
     //console.log(this.state.renderBall);
+    this.setState({ start: true });
     this.setState({ renderBall: true });
   }
   renderChoice() {
-    if (this.state.renderBall) {
-      return (
-        <>
-          <div className="ball" style={this.state.ballPosition}></div>
-          <div className="hole"></div>
-          <h2 className="heading-timer">{this.state.timer}</h2>
-        </>
-      );
-    } else
-      return (
+    return (
+      <>
+        <div className="ball" style={this.state.ballPosition}></div>
+        <div className="hole"></div>
+        <h2 className="heading-timer">{this.state.timer}</h2>
         <button className="start" onClick={this.buttonClickHandler}>
           Start
         </button>
-      );
+      </>
+    );
   }
   handleEventListener(event) {
     if (event.key === "ArrowRight") {
@@ -64,17 +63,23 @@ class Timer extends React.Component {
     }
     if (this.state.x === 250 && this.state.y === 250) {
       clearInterval(this.intervalId);
+      document.removeEventListener("keydown", this.handleEventListener);
       console.log("reached destination");
     }
   }
 
   componentDidMount() {
     this.intervalId = setInterval(() => {
-      if (this.state.renderBall) {
+      if (this.state.start) {
         this.setState({ timer: this.state.timer + 1 });
       }
     }, 1000);
-    document.addEventListener("keydown", this.handleEventListener);
+  }
+  componentDidUpdate() {
+    if (this.state.start && first === 0) {
+      document.addEventListener("keydown", this.handleEventListener);
+      first++;
+    }
   }
 
   componentWillUnmount() {
